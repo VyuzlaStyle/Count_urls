@@ -1,15 +1,4 @@
-# Файл с функциями от API BIT.LY
 import requests
-
-
-
-def get_user(token):
-  headers={
-    "Authorization": f"Bearer {token}"
-  }
-  response = requests.get("https://api-ssl.bitly.com/v4/user", headers=headers)
-  response.raise_for_status()
-  return response.text
 
 
 def get_short_link(token, url):
@@ -17,11 +6,11 @@ def get_short_link(token, url):
     "Authorization": f"Bearer {token}"
   }
   payload = {
-    "long_url" : f"{url}"
+    "long_url" : url
   }
   response = requests.post("https://api-ssl.bitly.com/v4/shorten",
                            headers=headers,
-                          json = payload)
+                           json=payload)
   response.raise_for_status()
   return response.json()['link']
 
@@ -36,18 +25,18 @@ def count_clicks(token,url):
   }
   response = requests.get(f"https://api-ssl.bitly.com/v4/bitlinks/{url}/clicks/summary",
                            headers=headers,
-                          params = payload
+                           params=payload
                           )
   response.raise_for_status()
   return response.json()['total_clicks']
 
 
-def get_information(token,url):
+def is_bitlink(token,url):
   headers={
     "Authorization": f"Bearer {token}"
   }
   response = requests.get(f"https://api-ssl.bitly.com/v4/bitlinks/{url}",
                            headers=headers
                           )
-  response.raise_for_status()
-  return response.json()
+  return response.ok
+
